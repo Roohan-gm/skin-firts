@@ -1,30 +1,46 @@
 {
   "expo": {
-    "name": "my-expo-app",
-    "slug": "my-expo-app",
+    "name": "Skin Firts",
+    "slug": "skin-firts",
+    "scheme": "skin-firts",
     "version": "1.0.0",
-
     "web": {
       "favicon": "./assets/favicon.png"
     },
-
     "experiments": {
       "tsconfigPaths": true
     },
-
-    "plugins": [],
-
+    "plugins": [
+      "expo-router",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/LeagueSpartan-Thin.ttf",
+            "./assets/fonts/LeagueSpartan-SemiBold.ttf",
+            "./assets/fonts/LeagueSpartan-Regular.ttf",
+            "./assets/fonts/Poppins-SemiBold.ttf",
+            "./assets/fonts/LeagueSpartan-Medium.ttf",
+            "./assets/fonts/LeagueSpartan-Light.ttf",
+            "./assets/fonts/LeagueSpartan-ExtraLight.ttf",
+            "./assets/fonts/Poppins-ExtraBold.ttf",
+            "./assets/fonts/LeagueSpartan-Bold.ttf",
+            "./assets/fonts/LeagueSpartan-Black.ttf"
+          ]
+        }
+      ]
+    ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-
     "userInterfaceStyle": "light",
-
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#2260FF"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -32,7 +48,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.ron.skin-firts"
     }
   }
 }

@@ -1,0 +1,198 @@
+import { SafeAreaView, ScrollView, View, Image, TouchableOpacity, Text } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import {
+  CalendarIcon,
+  ClockIcon,
+  CommentIcon,
+  HeartIcon,
+  ProfessionalIcon,
+  StarFilledIcon,
+  StarIcon,
+} from '@/components/icons';
+import { ChevronLeft } from 'lucide-react-native';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { useEffect, useMemo } from 'react';
+
+type UserData = {
+  id: number;
+  name: string;
+  specialty: string;
+  gender: 'male' | 'female';
+  rating: number;
+  comment: number;
+  experience?: string;
+  avatar: any;
+  schedules: { id: number; date: string; time: string }[];
+};
+
+export default function DoctorInfo() {
+  const { doctorInfo } = useLocalSearchParams<{ doctorInfo: string }>();
+  const parsedUser = useMemo<UserData>(
+    () =>
+      doctorInfo
+        ? JSON.parse(doctorInfo)
+        : {
+            id: 0,
+            name: 'Unknown Doctor',
+            specialty: 'Unknown Specialty',
+            gender: 'male',
+            rating: 0,
+            comment: 0,
+            avatar: null,
+            schedules: [],
+          },
+    [doctorInfo]
+  );
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!doctorInfo) {
+      router.replace('/some-default-route');
+    }
+  }, [doctorInfo, router]);
+
+  // Validate avatar to ensure it's a string
+  const avatarSource =
+    typeof parsedUser.avatar === 'string' && parsedUser.avatar
+      ? { uri: parsedUser.avatar }
+      : (parsedUser.avatar ?? require('@/assets/images/doctor.png'));
+
+  return (
+    <SafeAreaView>
+      <ScrollView contentContainerClassName="px-[30px] py-[35px]">
+        <View className="flex flex-row items-center justify-start gap-[81px]">
+          <TouchableOpacity onPress={router.back}>
+            <ChevronLeft width={24} height={24} color="#2260FF" strokeWidth={3} />
+          </TouchableOpacity>
+          <Text className="w-[121px] text-center font-lsSemiBold text-[24px] font-semibold leading-[100%] text-[#2260FF]">
+            Doctor Info
+          </Text>
+        </View>
+
+        <View className="mt-[20px] items-center justify-between gap-[14px] rounded-[17px] bg-[#CAD6FF] px-[21px] py-[18px]">
+          <View className="mb-[14px] flex-row items-center gap-[9.37px]">
+            <Image
+              source={avatarSource}
+              className="h-[140px] w-[139.24705505371094px] rounded-full"
+            />
+            <View className="flex-1  gap-[6px]">
+              <View className="flex-row items-center gap-[6px] rounded-full bg-[#2260FF] px-1 py-1 ">
+                <View className="size-[21px] items-center justify-center rounded-full bg-[#CAD6FF]">
+                  <ProfessionalIcon color="#2260FF" />
+                </View>
+                <View>
+                  <Text className="font-lsRegular text-[12px] leading-[100%] text-white">
+                    15 years
+                  </Text>
+                  <Text className="font-lsLight text-[12px] leading-[100%] text-white">
+                    experience
+                  </Text>
+                </View>
+              </View>
+              <Text className=" rounded-[18px] bg-[#2260FF] p-3 font-lsLight text-[12px] leading-[100%] text-white">
+                <Text className="font-lsSemiBold">Focus:</Text> The impact of hormonal imbalances on
+                skin conditions, specializing in acne, hirsutism, and other skin disorders.
+              </Text>
+            </View>
+          </View>
+          <View className="w-full items-center justify-center rounded-[13px] bg-white px-[10px] py-[5px] text-center">
+            <Text className="font-lsMedium text-[15px] text-[#2260FF]">{parsedUser.name}</Text>
+            <Text className="font-lsLight text-[13px]">{parsedUser.specialty}</Text>
+          </View>
+          <View className="w-full  flex-row items-center justify-between gap-[10px]">
+            <View className="flex flex-row gap-[5px]">
+              <View className="flex flex-row items-center  rounded-[13px] bg-white px-[6px] py-1">
+                <StarFilledIcon />
+                <Text className="ml-[5.29px] w-[20px] font-lsLight text-[12px] leading-[100%] text-[#2260FF]">
+                  {parsedUser.rating}
+                </Text>
+              </View>
+              <View className="flex flex-row items-center rounded-[13px] bg-white px-[6px] py-1">
+                <CommentIcon />
+                <Text className="ml-[5.29px] w-[21px] font-lsLight text-[12px] leading-[100%] text-[#2260FF] ">
+                  {parsedUser.comment}
+                </Text>
+              </View>
+            </View>
+            <View className="flex-row items-center justify-center rounded-full bg-white px-[5px] py-1">
+              <ClockIcon />
+              <Text className="ml-[5px] font-lsLight text-[12px] text-[#2260FF]">
+                Mon-Sat / {parsedUser.schedules[0]?.time}
+              </Text>
+            </View>
+          </View>
+          <View className="w-full flex-row items-center justify-between gap-[10px]">
+            <TouchableOpacity
+              onPress={() => {
+                router.push({
+                  pathname: '/schedule/[query]',
+                  params: { doctorId: parsedUser.id, doctorInfo: JSON.stringify(parsedUser) },
+                });
+              }}
+              className=" flex-row items-center gap-[7px] rounded-full bg-[#2260FF] px-2 py-1">
+              <CalendarIcon size={12} color={'#ffffff'} />
+              <Text className="font-lsLight text-[12px] text-white">Schedule</Text>
+            </TouchableOpacity>
+            <View className="flex-row gap-1">
+              <TouchableOpacity
+                onPress={() => {
+                  // Implement functionality
+                }}
+                className="size-[21px] items-center justify-center rounded-full bg-white ">
+                <AntDesign name="exclamation" size={14} color="#2260FF" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  // Implement functionality
+                }}
+                className="size-[21px] items-center justify-center rounded-full bg-white ">
+                <AntDesign name="question" size={14} color="#2260FF" />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  // Implement functionality
+                }}
+                className="size-[21px] items-center justify-center rounded-full bg-white p-2">
+                <StarIcon width={14} height={14} color={'#2260FF'} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  // Implement functionality
+                }}
+                className="size-[21px] items-center justify-center rounded-full bg-white ">
+                <HeartIcon width={14} height={14} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+        
+        <View>
+          <Text className="mt-[34px] font-lsMedium text-[14px] text-[#2260FF]">Profile</Text>
+          <Text className="font-lsLight text-[12px] ">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </Text>
+        </View>
+        <View>
+          <Text className="mt-[34px] font-lsMedium text-[14px] text-[#2260FF] capitalize">career path</Text>
+          <Text className="font-lsLight text-[12px] ">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </Text>
+        </View>
+        <View>
+          <Text className="mt-[34px] font-lsMedium text-[14px] text-[#2260FF] capitalize">highlights</Text>
+          <Text className="font-lsLight text-[12px] ">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </Text>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
