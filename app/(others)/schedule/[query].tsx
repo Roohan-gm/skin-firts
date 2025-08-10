@@ -29,7 +29,7 @@ type UserData = {
   schedules: { id: number; date: string; time: string }[];
 };
 
-export default function DoctorInfo() {
+export default function Schedule() {
   const [pickedDate, setPickedDate] = useState(dayjs().format('YYYY-MM-DD'));
   const { doctorInfo } = useLocalSearchParams<{ doctorInfo: string }>();
   const parsedUser = useMemo<UserData>(
@@ -186,7 +186,7 @@ export default function DoctorInfo() {
           </Text>
         </View>
         <View className="mt-[20px] h-full w-full bg-[#CAD6FF] px-[30px] ">
-          <CalendarStrip selected={pickedDate} onSelect={setPickedDate} />
+          <CalendarStrip selected={pickedDate} onSelect={setPickedDate} doctor={parsedUser} />
         </View>
       </ScrollView>
     </SafeAreaView>
