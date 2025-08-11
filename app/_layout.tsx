@@ -44,6 +44,8 @@ export default function RootLayout() {
           <Stack.Screen name="(others)/schedule/[query]" options={{ headerShown: false }} />
           <Stack.Screen name="(others)/schedule-details/[query]" options={{ headerShown: false }} />
           <Stack.Screen name="(others)/my-appointment/[query]" options={{ headerShown: false }} />
+          <Stack.Screen name="(others)/payment/[query]" options={{ headerShown: false }} />
+          <Stack.Screen name="(others)/payment-success/[query]" options={{ headerShown: false }} />
         </Stack>
       </QueryClientProvider>
     </>

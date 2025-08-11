@@ -317,6 +317,7 @@ export default function ScheduleDetails() {
               <TextInput
                 placeholder="30"
                 value={age}
+                keyboardType='numeric'
                 onChangeText={setAge}
                 placeholderTextColor="#809CFF"
                 className="rounded-[13px] bg-[#ECF1FF] px-[13px] py-3 pr-12 font-lsMedium  text-[14px] leading-[100%] text-[#809CFF]"

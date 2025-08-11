@@ -78,9 +78,19 @@ export default function MyAppointment() {
               {displayDate}
             </Text>
             <View className="flex-row items-center gap-2">
-              <View className="h-[26.220338821411133px] w-[26.220338821411133px] items-center justify-center rounded-full bg-[#2260FF]">
+              <TouchableOpacity onPress={() =>
+                router.push({
+                  pathname: '/payment/[query]',
+                  params: {
+                    query: 'appointment',
+                    doctorInfo: JSON.stringify(doctor),
+                    formData: JSON.stringify(fd),
+                  },
+                })
+              }
+                className="h-[26.220338821411133px] w-[26.220338821411133px] items-center justify-center rounded-full bg-[#2260FF]">
                 <RightCheckIcon color="#fff" height={16} width={16} />
-              </View>
+              </TouchableOpacity>
               <View className="h-[26.220338821411133px] w-[26.220338821411133px] items-center justify-center rounded-full bg-[#2260FF]">
                 <CrossCheckIcon color="#fff" height={16} width={16} />
               </View>
