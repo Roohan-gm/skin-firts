@@ -1,5 +1,5 @@
 import React, { JSX, useState } from 'react';
-import { router, useRouter } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import {
   SafeAreaView,
   View,
@@ -9,7 +9,7 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import { ChevronLeft, Heart } from 'lucide-react-native';
+import { ChevronLeft } from 'lucide-react-native';
 import {
   ArroWDownIcon,
   CalendarIcon,
@@ -399,9 +399,11 @@ const renderItemFemale = ({ item }: { item: Doctor }) => (
 );
 
 export default function ShortBy() {
-  const router = useRouter();
-  const [page, setPage] = useState<Page>('A-Z');
-  const [heartSegment, setHeartSegment] = useState<'doctors' | 'services'>('doctors');
+  const { page: initialPage, segment: initialSegment } = useLocalSearchParams();
+  const [page, setPage] = useState<Page>((initialPage as Page) ?? 'A-Z');
+  const [heartSegment, setHeartSegment] = useState<'doctors' | 'services'>(
+    (initialSegment as 'doctors' | 'services') ?? 'doctors'
+  );
   // right after ShortBy() declaration
   const [openService, setOpenService] = useState<Record<number, boolean>>({});
   const toggleService = (id: number) => {
@@ -434,12 +436,12 @@ export default function ShortBy() {
         {isOpen && (
           <>
             <View className="mt-2 rounded-[17px] bg-[#CAD6FF] p-4">
-              <Text className="text-center font-lsExtraLight text-[13px]">
-                {item.description}
-              </Text>
+              <Text className="text-center font-lsExtraLight text-[13px]">{item.description}</Text>
             </View>
-            <TouchableOpacity className="mt-3 rounded-full bg-[#CAD6FF] py-1 mb-2">
-              <Text className="font-lsMedium text-[20px] text-center text-[#2260FF]">Looking doctors</Text>
+            <TouchableOpacity className="mb-2 mt-3 rounded-full bg-[#CAD6FF] py-1">
+              <Text className="text-center font-lsMedium text-[20px] text-[#2260FF]">
+                Looking doctors
+              </Text>
             </TouchableOpacity>
           </>
         )}

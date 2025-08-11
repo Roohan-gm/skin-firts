@@ -48,6 +48,14 @@ const doctorList = [
     comment: 90,
     avatar: require('../../assets/images/michael-davidson.png'),
   },
+  {
+    id: 5,
+    name: 'Dr. Michael Davidson, M.D.',
+    specialty: 'Nano-Dermatology',
+    rating: 4.8,
+    comment: 90,
+    avatar: require('../../assets/images/michael-davidson.png'),
+  },
 ];
 
 const DoctorCard = ({ avatar, name, specialty, rating, comment }: (typeof doctorList)[0]) => (
@@ -132,12 +140,19 @@ export default function HomeScreen() {
                 Doctors
               </Text>
             </TouchableOpacity>
-            <View className="flex items-center justify-center">
+            <TouchableOpacity
+              onPress={() =>
+                router.push({
+                  pathname: '/(others)/sort-by', 
+                  params: { page: 'Heart', segment: 'doctors' },
+                })
+              }
+              className="flex items-center justify-center">
               <HeartIcon width={15} height={17} />
               <Text className="font-lsLight text-[12px] leading-[100%] text-[#2260FF]">
                 Favorite
               </Text>
-            </View>
+            </TouchableOpacity>
           </View>
           <View className="flex h-[33px] flex-1 flex-row items-center justify-between rounded-full bg-[#CAD6FF] pr-[7px]">
             <View className="ml-[3px] flex size-[26px] items-center justify-center rounded-full bg-white">
@@ -148,7 +163,7 @@ export default function HomeScreen() {
         </View>
         <ScheduleCard />
 
-        <View className="mx-[30px] my-[15px]">
+        <View className="mx-[30px] mt-[15px] mb-28">
           {doctorList.map((doc) => (
             <DoctorCard key={doc.id} {...doc} />
           ))}
