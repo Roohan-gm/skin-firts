@@ -9,8 +9,9 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import { ChevronLeft } from 'lucide-react-native';
+import { ChevronLeft, Heart } from 'lucide-react-native';
 import {
+  ArroWDownIcon,
   CalendarIcon,
   CategoriesIcon,
   FemaleIcon,
@@ -93,6 +94,39 @@ const doctorList: Doctor[] = [
       { id: 101, date: 'Wednesday, 15 June', time: '1:30 AM - 2:00 PM' },
       { id: 102, date: 'Monday, 21 June', time: '11:00 AM - 11:30 AM' },
     ],
+  },
+];
+
+type Service = {
+  id: number;
+  title: string;
+  description: string;
+};
+
+const services: Service[] = [
+  {
+    id: 1,
+    title: 'Dermato-Endocrinology',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent pellentesque congue lorem, vel tincidunt tortor placerat a. Proin ac diam quam.',
+  },
+  {
+    id: 2,
+    title: 'Cosmetic Bioengineering',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent pellentesque congue lorem, vel tincidunt tortor placerat a. Proin ac diam quam.',
+  },
+  {
+    id: 3,
+    title: 'Dermato-Genetics',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent pellentesque congue lorem, vel tincidunt tortor placerat a. Proin ac diam quam.',
+  },
+  {
+    id: 4,
+    title: 'Solar Dermatology',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent pellentesque congue lorem, vel tincidunt tortor placerat a. Proin ac diam quam.',
   },
 ];
 
@@ -367,14 +401,51 @@ const renderItemFemale = ({ item }: { item: Doctor }) => (
 export default function ShortBy() {
   const router = useRouter();
   const [page, setPage] = useState<Page>('A-Z');
+  const [heartSegment, setHeartSegment] = useState<'doctors' | 'services'>('doctors');
+  // right after ShortBy() declaration
+  const [openService, setOpenService] = useState<Record<number, boolean>>({});
+  const toggleService = (id: number) => {
+    setOpenService((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id],
+    }));
+  };
 
-  const renderItem = {
-    'A-Z': renderItemAZ,
-    Heart: renderItemHeart,
-    Star: renderItemStar,
-    Male: renderItemMale,
-    Female: renderItemFemale,
-  }[page];
+  // inside ShortBy (just before return)
+  const renderServiceCard = ({ item }: { item: Service }) => {
+    const isOpen = openService[item.id] ?? false;
+    return (
+      <>
+        <TouchableOpacity
+          onPress={() => toggleService(item.id)}
+          className="mb-3 flex-row items-center justify-between rounded-full bg-[#2260FF] px-4 py-3">
+          <View className="flex-1 flex-row items-center gap-2">
+            <HeartFilledIcon width={24} height={24} color="#fff" />
+            <Text className="font-lsSemiBold text-[16px] text-white">{item.title}</Text>
+          </View>
+
+          <View
+            className="size-[24px] items-center justify-center rounded-full bg-white"
+            style={isOpen ? { transform: [{ rotate: '180deg' }] } : undefined}>
+            <ArroWDownIcon color="#2260FF" />
+          </View>
+        </TouchableOpacity>
+
+        {isOpen && (
+          <>
+            <View className="mt-2 rounded-[17px] bg-[#CAD6FF] p-4">
+              <Text className="text-center font-lsExtraLight text-[13px]">
+                {item.description}
+              </Text>
+            </View>
+            <TouchableOpacity className="mt-3 rounded-full bg-[#CAD6FF] py-1 mb-2">
+              <Text className="font-lsMedium text-[20px] text-center text-[#2260FF]">Looking doctors</Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </>
+    );
+  };
 
   // Determine the title based on the selected tab
   const title = {
@@ -447,13 +518,65 @@ export default function ShortBy() {
           ))}
         </View>
 
-        <FlatList
-          data={filteredDoctors}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id.toString()}
-          scrollEnabled={false}
-          className="my-[37px]"
-        />
+        {page === 'Heart' && (
+          <View className="mt-6 flex-row gap-[11px] rounded-full p-1 ">
+            {(['doctors', 'services'] as const).map((seg) => (
+              <TouchableOpacity
+                key={seg}
+                onPress={() => setHeartSegment(seg)}
+                className={`flex-1 items-center rounded-full py-3 ${
+                  heartSegment === seg ? 'bg-[#2260FF]' : 'bg-[#CAD6FF]'
+                }`}>
+                <Text
+                  className={`font-lsRegular text-[20px] ${
+                    heartSegment === seg ? 'text-white' : 'text-[#2260FF]'
+                  }`}>
+                  {seg.charAt(0).toUpperCase() + seg.slice(1)}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+
+        {/* ========= Doctors ========= */}
+        {page !== 'Heart' && (
+          <FlatList
+            data={filteredDoctors}
+            renderItem={
+              {
+                'A-Z': renderItemAZ,
+                Star: renderItemStar,
+                Male: renderItemMale,
+                Female: renderItemFemale,
+              }[page] as any
+            }
+            keyExtractor={(item) => item.id.toString()}
+            scrollEnabled={false}
+            className="my-8"
+          />
+        )}
+
+        {/* ========= Heart Doctors ========= */}
+        {page === 'Heart' && heartSegment === 'doctors' && (
+          <FlatList
+            data={filteredDoctors}
+            renderItem={renderItemHeart as any}
+            keyExtractor={(item) => item.id.toString()}
+            scrollEnabled={false}
+            className="my-8"
+          />
+        )}
+
+        {/* ========= Heart Services ========= */}
+        {page === 'Heart' && heartSegment === 'services' && (
+          <FlatList
+            data={services}
+            renderItem={renderServiceCard as any}
+            keyExtractor={(item) => item.id.toString()}
+            scrollEnabled={false}
+            className="my-8"
+          />
+        )}
       </ScrollView>
     </SafeAreaView>
   );
