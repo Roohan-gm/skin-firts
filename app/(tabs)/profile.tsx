@@ -111,7 +111,14 @@ const Profile = () => {
                 <ArrowRightIcon />
               </TouchableOpacity>
 
-              <TouchableOpacity className="mb-[16px] flex-row items-center justify-between">
+              <TouchableOpacity
+                onPress={() =>
+                  router.push({
+                    pathname: '/(others)/sort-by',
+                    params: { page: 'Heart', segment: 'doctors' },
+                  })
+                }
+                className="mb-[16px] flex-row items-center justify-between">
                 <View className="flex-row items-center">
                   <View className="mr-[21px] size-[40px] items-center justify-center rounded-full bg-[#CAD6FF]">
                     <HeartIcon color={'#2260FF'} width={23} height={20} />
